@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+@Dao
 interface AsteroidDao {
     @Query ("select * from asteroidEntity where closeApproachDate >= CURRENT_TIMESTAMP")
     fun getAsteroidList() : LiveData<List<AsteroidEntity>>
