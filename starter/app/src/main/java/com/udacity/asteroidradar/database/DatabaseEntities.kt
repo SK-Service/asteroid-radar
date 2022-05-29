@@ -1,8 +1,10 @@
 package com.udacity.asteroidradar.database
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.domain.Asteroid
+import kotlinx.android.parcel.Parcelize
 
 @Entity  //Keeping the entity name defaulted to AsteroidEntity with id as the primary key
 data class AsteroidEntity constructor(
@@ -30,4 +32,21 @@ fun List<AsteroidEntity>.asDomainModel(): List<Asteroid> {
             isPotentiallyHazardous = it.isPotentiallyHazardous)
     }
 }
+
+fun ArrayList<Asteroid>.toDatabaseModel():Array<AsteroidEntity>{
+
+    return map{
+        AsteroidEntity(
+            id = it.id,
+            codename = it.codename,
+            closeApproachDate = it.closeApproachDate,
+            absoluteMagnitude = it.absoluteMagnitude,
+            estimatedDiameter = it.estimatedDiameter,
+            relativeVelocity = it.relativeVelocity,
+            distanceFromEarth = it.distanceFromEarth,
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
+    }.toTypedArray()
+}
+
 

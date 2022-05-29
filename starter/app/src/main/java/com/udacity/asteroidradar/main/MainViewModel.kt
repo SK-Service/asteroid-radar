@@ -1,66 +1,24 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.database.AsteroidDao
 import com.udacity.asteroidradar.database.AsteroidDatabase
-import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.domain.Asteroid
+import com.udacity.asteroidradar.domain.PictureOfDayDM
 import com.udacity.asteroidradar.repository.AsteroidRepo
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.time.LocalDate
+import kotlin.Exception
+
 
 enum class AsteroidApiStatus {LOADING, ERROR, DONE }
 
 class MainViewModel (datasource: AsteroidDao, application: Application): AndroidViewModel(application) {
 
-
-
-//    //get hold of the database instance - by passing the application context
-//    private val database = getDatabase(application)
-//    private val asteroidRepo = AsteroidRepo(database)
-
-//    //Internal lifecycle aware List of Asteroids
-//    private val _listOfAsteroids = MutableLiveData<List<Asteroid>>()
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val startDate = LocalDate.now()
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val endDate = startDate.plusDays(7)
-
-    //To provide external access to the list of asteroids
-//    val listOfAsteroid: LiveData<List<Asteroid>> {Transformations.map(
-//        database.asteroidDao.getAsteroidListByFilter(startDate.toString(), endDate.toString())) {
-//        it.asDomainModel()
-//    }}
-//        get() = _listOfAsteroids
-
-//    val listOfAsteroid: LiveData<List<Asteroid>> = database.asteroidDao.getAsteroidListByFilter(
-//                    startDate.toString(),endDate.toString())
-
-//    var _listOfAsteroid = MutableLiveData<List<Asteroid>>()
-//    _listOfAsteroid.value = _listOfAsteroid.value?.plus(item) ?: listOf(item)
-//
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    _listOfAsteroid.value = Transformations.map (database.asteroidDao.getAsteroidListByFilter(
-//        startDate.toString(),endDate.toString())) {it.asDomainModel()}
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    var listOfAsteroid: LiveData<List<Asteroid>> = Transformations.map (
-                AsteroidDatabase.getDatabase(application).asteroidDao.getAsteroidListByFilter(
-                         startDate.toString(),endDate.toString())) {it.asDomainModel()}
-//        set(value) {
-//            field = value
-//            // For an extra challenge, update this to use the paging library.
-//
-//            // Notify any registered observers that the data set has changed. This will cause every
-//            // element in our RecyclerView to be invalidated.
-////            notifyDataSetChanged()
-//        }
+    private var _listOfAsteroid = MutableLiveData<MutableList<Asteroid>>(mutableListOf())
+    val listOfAsteroid: LiveData<MutableList<Asteroid>>
+        get() = _listOfAsteroid
 
     //Internal track of navigation to asteroid detail page
     private val _navigateToDetail = MutableLiveData<Asteroid?>()
@@ -71,30 +29,46 @@ class MainViewModel (datasource: AsteroidDao, application: Application): Android
 
     //Internal track of NASA API Call
     private val _nasaApiCallStatus = MutableLiveData<AsteroidApiStatus>()
-
     //To provide external access to the NASA API call status
-
     val nasaApiCallStatus : LiveData<AsteroidApiStatus>
         get() = _nasaApiCallStatus
+
+    //picture of day
+    private var _picOfDayProperty = MutableLiveData<PictureOfDayDM>()
+    val picOfDayProperty: LiveData<PictureOfDayDM>
+        get() = _picOfDayProperty
+
 
     // init is called to populate the database or cache at the start, with the list of asteroids
     init {
         Log.i("MainViewModel", "inside init")
         viewModelScope.launch {
-            Log.i("MainViewmodel", "inside init-launch")
-            AsteroidRepo(AsteroidDatabase.getDatabase(application)).refreshAsteroidList()
-        }
-    }
 
-    private fun getListOfAsteroidsFromNasaApi() {
-        viewModelScope.launch {
             _nasaApiCallStatus.value =AsteroidApiStatus.LOADING
-
-             try {
+            try {
                 _nasaApiCallStatus.value = AsteroidApiStatus.DONE
-             }catch (e: Exception) {
+                _listOfAsteroid.value = AsteroidRepo(AsteroidDatabase.getDatabase(application))
+                    .refreshAsteroidList()
+                    .toMutableList()
+            } catch (e: Exception){
+                Log.i("MainViewModel", "After AsteroidRepo call and inside catch exception")
+                e.printStackTrace()
                 _nasaApiCallStatus.value = AsteroidApiStatus.ERROR
-             }
+            }
+
+        }
+        //Loading picture of the day
+        viewModelScope.launch {
+            try {
+                Log.i("MainViewModel", "Before retrieving pic of day from DB")
+                _picOfDayProperty.value = AsteroidRepo(AsteroidDatabase.getDatabase(application))
+                    .refreshPictureOfDay()
+            } catch (e: Exception){
+                Log.i("MainViewModel", "After retrieving picOfDay from DB " +
+                                        "and inside catch exception")
+                e.printStackTrace()
+            }
+
         }
     }
 

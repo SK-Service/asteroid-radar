@@ -8,20 +8,30 @@ import androidx.room.*
 @Dao
 interface AsteroidDao {
     @Query ("select * from asteroidEntity where closeApproachDate >= CURRENT_TIMESTAMP")
-    fun getAsteroidList() : LiveData<List<AsteroidEntity>>
+    fun getAsteroidList() : List<AsteroidEntity>
 
     @Query("select * from asteroidentity where closeApproachDate " +
             "between :startDate and :endDate order by date(closeApproachDate) asc")
-    fun getAsteroidListByFilter(startDate: String, endDate: String): LiveData<List<AsteroidEntity>>
+    fun getAsteroidListByFilter(startDate: String, endDate: String): List<AsteroidEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroids: AsteroidEntity)
+}
+
+@Dao
+interface PicOfDayDao {
+    @Query ("select * from pictureOfDayEntity")
+    fun getPicOfDay() : PictureOfDayEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg pictureOfDayEntity: PictureOfDayEntity)
 }
 
 //A database to cache the asteroid information pulled using NASA API
 @Database (entities = [AsteroidEntity::class], version = 1, exportSchema = false)
 abstract class AsteroidDatabase: RoomDatabase() {
     abstract val asteroidDao:AsteroidDao
+    abstract val picOfDayDao: PicOfDayDao
 
 
 companion object {

@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 import com.udacity.asteroidradar.database.AsteroidEntity
 import com.udacity.asteroidradar.domain.Asteroid
 
-//NasaAsteroidContainer hold a list of Asteroid from querying NASA API
+//NasaAsteroidContainer hold a list of NasaAsteroid (JSON Objects) from querying NASA API
 @JsonClass (generateAdapter = true)
 data class NasaAsteroidContainer (val asteroids: List<NasaAsteroid>)
 

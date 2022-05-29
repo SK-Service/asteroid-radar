@@ -19,14 +19,22 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Log.i("MainFragment", "inside onCreateView")
+        //Inflate the Main View - which is the list of asteroids
         val binding: FragmentMainBinding = DataBindingUtil.inflate(inflater,
                         R.layout.fragment_main, container, false)
+
+        //Bind the AsteroidRecyclerAdapter to the layout view - which references the RecyclerView
+        binding.asteroidRecycler.adapter = AsteroidRecyclerAdapter (
+                                        AsteroidRecyclerAdapter.AsteroidOnClickListener{
+                TODO("onclick of an asteroid in the list")
+        } )
         //Get hold of the application context
         val application = requireNotNull(this.activity).application
         //Get hold of the viewmodel with the application context
         val datasource = AsteroidDatabase.getDatabase(application).asteroidDao
         val viewModelFactory = MainViewModelFactory(datasource, application)
         val mainViewModel =ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+
         Log.i("MainFragment", "inside onCreateView: mainViewmodel:<$mainViewModel>")
         binding.viewModel = mainViewModel
 
@@ -34,6 +42,9 @@ class MainFragment : Fragment() {
         binding.setLifecycleOwner(this)
 
         setHasOptionsMenu(true)
+
+        Log.i("MainFragment", "onCreateView before setting an observer")
+//        TODO("Add observer code")
 
         Log.i("MainFragment", "inside onCreateView: Before Return")
 

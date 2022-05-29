@@ -3,10 +3,15 @@ package com.udacity.asteroidradar
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+
+import androidx.appcompat.widget.ResourceManagerInternal.get
 import androidx.databinding.BindingAdapter
+
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.main.AsteroidRecyclerAdapter
+
 
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
@@ -45,11 +50,20 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 }
 
 @BindingAdapter("listData")
-fun bindListData ( recyclerview: RecyclerView, list:List<Asteroid?>) {
+fun bindListData ( recyclerview: RecyclerView, list:List<Asteroid>?) {
     Log.i("BindngAdapter-listData", "inside bindListData")
     val adapter = recyclerview.adapter as AsteroidRecyclerAdapter
-    Log.i("BindngAdapter-listData", "Inside bindListData, list:<${list.size}>")
+    Log.i("BindngAdapter-listData", "Inside bindListData, list:<${list?.size}>")
     if (list != null) {
         adapter.submitList(list)
     }
+
+@BindingAdapter("imgSrcUrl")
+fun bindImgSrcUrl(imageView: ImageView, url: String?) {
+    Picasso.get().load(url)
+        .placeholder(R.drawable.placeholder_picture_of_day)
+        .error(R.drawable.placeholder_picture_of_day)
+        .into(imageView)
+    }
+
 }
