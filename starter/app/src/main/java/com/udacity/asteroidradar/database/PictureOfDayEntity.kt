@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.api.PictureOfDayJson
 import com.udacity.asteroidradar.domain.PictureOfDayDM
 
-@Entity
+@Entity (tableName = "picture_of_day")
 data class PictureOfDayEntity  (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,

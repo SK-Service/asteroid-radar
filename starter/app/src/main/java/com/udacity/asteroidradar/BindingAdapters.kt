@@ -3,10 +3,7 @@ package com.udacity.asteroidradar
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-
-import androidx.appcompat.widget.ResourceManagerInternal.get
 import androidx.databinding.BindingAdapter
-
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.domain.Asteroid
@@ -59,11 +56,11 @@ fun bindListData ( recyclerview: RecyclerView, list:List<Asteroid>?) {
     }
 
 @BindingAdapter("imgSrcUrl")
-fun bindImgSrcUrl(imageView: ImageView, url: String?) {
+fun ImageView.loadImage( url: String?) {
     Picasso.get().load(url)
         .placeholder(R.drawable.placeholder_picture_of_day)
         .error(R.drawable.placeholder_picture_of_day)
-        .into(imageView)
+        .into(this)
     }
 
 }

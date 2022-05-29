@@ -20,7 +20,7 @@ interface AsteroidDao {
 
 @Dao
 interface PicOfDayDao {
-    @Query ("select * from pictureOfDayEntity")
+    @Query ("select * from picture_of_day LIMIT 1")
     fun getPicOfDay() : PictureOfDayEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -28,7 +28,7 @@ interface PicOfDayDao {
 }
 
 //A database to cache the asteroid information pulled using NASA API
-@Database (entities = [AsteroidEntity::class], version = 1, exportSchema = false)
+@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 1, exportSchema = false)
 abstract class AsteroidDatabase: RoomDatabase() {
     abstract val asteroidDao:AsteroidDao
     abstract val picOfDayDao: PicOfDayDao
