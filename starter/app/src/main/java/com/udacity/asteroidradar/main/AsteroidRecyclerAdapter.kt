@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +45,13 @@ companion object AsteroidDiffCallBack: DiffUtil.ItemCallback<Asteroid>() {
 
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
         val asteroid =getItem(position)
+        Log.i("AsteroidRecyclerAdapter", "inside onBindViewHolder")
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(asteroid)
+            run {
+                Log.i("AsteroidRecyclerAdapter", "inside onBindViewHolder - Set on click listener")
+                onClickListener.onClick(asteroid)
+            }
+
         }
         holder.bind(asteroid)
     }
@@ -56,7 +62,9 @@ companion object AsteroidDiffCallBack: DiffUtil.ItemCallback<Asteroid>() {
 
     class AsteroidOnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
 
-        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
+        fun onClick(asteroid: Asteroid) = {
+                    Log.i("AsteroidOnClickListener", "Inisde OnClick")
+                    clickListener(asteroid) }
     }
 
 }

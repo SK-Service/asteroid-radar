@@ -20,9 +20,9 @@ interface AsteroidService{
 }
 
 interface PicOfDayService{
-    @GET("nplanetary/apod")
+    @GET("planetary/apod")
     suspend fun getNasaPicOfDay(
-                @Query("API_KEY") apiKey: String =
+                @Query("api_key") apiKey: String =
                     "SitZzqlkTck1infdlYNYPFtgbReI51ddib6Hedyu") : PictureOfDayJson
 
 }

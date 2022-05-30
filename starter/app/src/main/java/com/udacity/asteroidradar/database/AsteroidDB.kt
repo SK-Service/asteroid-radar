@@ -28,7 +28,7 @@ interface PicOfDayDao {
 }
 
 //A database to cache the asteroid information pulled using NASA API
-@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 1, exportSchema = false)
+@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 2, exportSchema = false)
 abstract class AsteroidDatabase: RoomDatabase() {
     abstract val asteroidDao:AsteroidDao
     abstract val picOfDayDao: PicOfDayDao

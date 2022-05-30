@@ -60,11 +60,16 @@ class AsteroidRepo (private val database: AsteroidDatabase){
 
 
             Log.i("AsteroidRepo", "Before call to insertAll DB with pic of day info")
+
+            Log.i("AsteroidRepo", "Title:<${picOfDayNasa.title}>, " +
+                    "URL<${picOfDayNasa.url}>")
+
             database.picOfDayDao.insertAll(picOfDayNasa.toEntityModel())
+
             Log.i("AsteroidRepo", "After call to Database for pic of day info")
 
             Log.i("AsteroidRepo", "Before call to fetch from DB")
-            val picOfDayDB = database.picOfDayDao.getPicOfDay()
+            picOfDayDB = database.picOfDayDao.getPicOfDay()
 
             Log.i("AsteroidRepo", "After fetch picture from DB")
         }

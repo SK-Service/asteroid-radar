@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -26,7 +28,7 @@ class MainFragment : Fragment() {
         //Bind the AsteroidRecyclerAdapter to the layout view - which references the RecyclerView
         binding.asteroidRecycler.adapter = AsteroidRecyclerAdapter (
                                         AsteroidRecyclerAdapter.AsteroidOnClickListener{
-                TODO("onclick of an asteroid in the list")
+                    viewModel.displayAsteroidDetails(it)
         } )
         //Get hold of the application context
         val application = requireNotNull(this.activity).application
@@ -44,7 +46,16 @@ class MainFragment : Fragment() {
         setHasOptionsMenu(true)
 
         Log.i("MainFragment", "onCreateView before setting an observer")
-//        TODO("Add observer code")
+        viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer {
+                    Log.i("MainFragment", "Inside Observer for navigateToDetail")
+                    if (it != null ) {
+                        Log.i("MainFragment", "Asteroid is selected and not null")
+                        this.findNavController().navigate(MainFragmentDirections.actionShowAsteroidDetail(it))
+                        Log.i("MainFragment", "after Navigate")
+                        viewModel.displayAsteroidDetailsComplete()
+                        Log.i("MainFragment", "Navigat to Detail is set back to null")
+                    }
+        })
 
         Log.i("MainFragment", "inside onCreateView: Before Return")
 
