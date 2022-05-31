@@ -16,19 +16,25 @@ interface AsteroidDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroids: AsteroidEntity)
+
+    @Query("delete from asteroidentity where closeApproachDate< :date")
+    fun removeOldAsteroids(date: String)
 }
 
 @Dao
 interface PicOfDayDao {
-    @Query ("select * from picture_of_day LIMIT 1")
+    @Query ("select * from picture_of_day order by date(date) desc LIMIT 1")
     fun getPicOfDay() : PictureOfDayEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg pictureOfDayEntity: PictureOfDayEntity)
+
+    @Query("delete from picture_of_day where date < :date")
+    fun removeOldPicOfDay(date: String)
 }
 
 //A database to cache the asteroid information pulled using NASA API
-@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 2, exportSchema = false)
+@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 3, exportSchema = false)
 abstract class AsteroidDatabase: RoomDatabase() {
     abstract val asteroidDao:AsteroidDao
     abstract val picOfDayDao: PicOfDayDao

@@ -11,7 +11,8 @@ data class PictureOfDayEntity  (
     val id: Long = 0L,
     val mediaType: String,
     val title: String,
-    val url: String
+    val url: String,
+    var date: String =""
         )
 
 fun PictureOfDayEntity.toDomainModel() : PictureOfDayDM {

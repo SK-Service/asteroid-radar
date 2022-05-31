@@ -50,6 +50,8 @@ companion object AsteroidDiffCallBack: DiffUtil.ItemCallback<Asteroid>() {
             run {
                 Log.i("AsteroidRecyclerAdapter", "inside onBindViewHolder - Set on click listener")
                 onClickListener.onClick(asteroid)
+                Log.i("AsteroidRecyclerAdapter", "inside onBindViewHolder - After " +
+                                    "onClickListener.onClick(asteroid)")
             }
 
         }
@@ -62,9 +64,7 @@ companion object AsteroidDiffCallBack: DiffUtil.ItemCallback<Asteroid>() {
 
     class AsteroidOnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
 
-        fun onClick(asteroid: Asteroid) = {
-                    Log.i("AsteroidOnClickListener", "Inisde OnClick")
-                    clickListener(asteroid) }
+        fun onClick(asteroid: Asteroid) =  clickListener(asteroid)
     }
 
 }

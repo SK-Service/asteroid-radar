@@ -54,13 +54,13 @@ fun bindListData ( recyclerview: RecyclerView, list:List<Asteroid>?) {
     if (list != null) {
         adapter.submitList(list)
     }
+}
 
 @BindingAdapter("imgSrcUrl")
 fun ImageView.loadImage( url: String?) {
+    Log.i("BindingAdapter", "Inside loadImage<${url}>")
     Picasso.get().load(url)
         .placeholder(R.drawable.placeholder_picture_of_day)
         .error(R.drawable.placeholder_picture_of_day)
         .into(this)
-    }
-
 }
