@@ -43,8 +43,6 @@ class MainFragment : Fragment() {
         //Set this activty as the lifecycleowner
         binding.setLifecycleOwner(this)
 
-        setHasOptionsMenu(true)
-
         Log.i("MainFragment", "onCreateView before setting an observer")
         viewModel.navigateToDetail.observe(viewLifecycleOwner, Observer {
                     Log.i("MainFragment", "Inside Observer for navigateToDetail")
@@ -62,12 +60,4 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_overflow_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
-    }
 }
