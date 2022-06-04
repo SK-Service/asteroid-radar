@@ -1,0 +1,64 @@
+package com.udacity.asteroidradar.database
+
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.room.*
+
+//The Data Access Object pattern - an interface to retrieve or insert data
+@Dao
+interface AsteroidDao {
+    @Query ("select * from asteroidEntity where closeApproachDate >= CURRENT_TIMESTAMP")
+    fun getAsteroidList() : List<AsteroidEntity>
+
+    @Query("select * from asteroidentity where closeApproachDate " +
+            "between :startDate and :endDate order by date(closeApproachDate) asc")
+    fun getAsteroidListByFilter(startDate: String, endDate: String): List<AsteroidEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg asteroids: AsteroidEntity)
+
+    @Query("delete from asteroidentity where closeApproachDate< :date")
+    fun removeOldAsteroids(date: String)
+}
+
+@Dao
+interface PicOfDayDao {
+    @Query ("select * from picture_of_day order by date(date) desc LIMIT 1")
+    fun getPicOfDay() : PictureOfDayEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg pictureOfDayEntity: PictureOfDayEntity)
+
+    @Query("delete from picture_of_day where date < :date")
+    fun removeOldPicOfDay(date: String)
+}
+
+//A database to cache the asteroid information pulled using NASA API
+@Database (entities = [AsteroidEntity::class, PictureOfDayEntity::class], version = 3, exportSchema = false)
+abstract class AsteroidDatabase: RoomDatabase() {
+    abstract val asteroidDao:AsteroidDao
+    abstract val picOfDayDao: PicOfDayDao
+
+
+companion object {
+    //@Volatile ensures that the INSTANCE value is never cached and it is pulled from main memory
+    @Volatile
+    //this will keep track of the database instance retrieved via getDatabase
+    private lateinit var INSTANCE: AsteroidDatabase
+
+    fun getDatabase(context: Context): AsteroidDatabase {
+        synchronized(this) {
+            if (!::INSTANCE.isInitialized) {
+                INSTANCE = Room.databaseBuilder(
+                    context.applicationContext,
+                    AsteroidDatabase::class.java,
+                    "asteroids"
+                ).fallbackToDestructiveMigration()
+                    .build()
+            }
+        }
+
+        return INSTANCE
+    }
+}
+}

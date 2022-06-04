@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#010613</color>
+    <color name="colorPrimaryDark">#010613</color>
+    <color name="colorAccent">#FF8282</color>
+    <color name="app_background">#010613</color>
+    <color name="default_text_color">#BBFF77</color>
+    <color name="text_grey">#D2D2D2</color>
+    <color name="text_bluish_black">#3B499F</color>
+    <color name="potentially_hazardous">#FF2A1B</color>
+</resources>
